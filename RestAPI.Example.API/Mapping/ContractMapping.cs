@@ -35,5 +35,27 @@ namespace RestAPI.Example.API.Mapping
                 Movies = movies.Select(MapToMovieResponse)
             };
         }
+
+        public static Movie MapToMovie(this UpdateMovieRequest request, Guid id)
+        {
+            return new Movie
+            {
+                Id = id,
+                Title = request.Title,
+                YearOfRelease = request.YearOfRelease,
+                Genres = request.Genera.ToList(),
+            };
+        }
+
+        public static MovieResponse MapToMovieResponse(this UpdateMovieRequest updateMovieRequest, Guid id)
+        {
+            return new MovieResponse
+            {
+                Id = id,
+                Title = updateMovieRequest.Title,
+                YearOfRelease = updateMovieRequest.YearOfRelease,
+                Genera = updateMovieRequest.Genera
+            };
+        }
     }
 }

@@ -14,8 +14,8 @@ namespace RestAPI.Example.API.Controllers
         {
             var movie = createMovieRequest.MapToMovie();
             await movieRepository.CreateAsync(movie);
-            //return Created(APIEndpoints.Movie.Get, movie.MapToMovieResponse());
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = movie.Id }, movie);
+            return Created(APIEndpoints.Movie.Get, movie.MapToMovieResponse());
+            //return CreatedAtAction(nameof(GetByIdAsync), new { id = movie.Id }, movie);
         }
 
         [HttpGet(APIEndpoints.Movie.Get)]
@@ -23,7 +23,7 @@ namespace RestAPI.Example.API.Controllers
         {
             var movie = await movieRepository.GetByIdAsync(id);
 
-            if(movie is null) return NotFound();
+            if (movie is null) return NotFound();
 
             return Ok(movie.MapToMovieResponse());
         }
@@ -35,5 +35,15 @@ namespace RestAPI.Example.API.Controllers
             return Ok(movies.MapToMoviesResponse());
         }
 
+
+        [HttpPut(APIEndpoints.Movie.Update)]
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, UpdateMovieRequest updateMovieRequest)
+        {
+            var response = await movieRepository.UpdateAsync(id, updateMovieRequest.MapToMovie(id));
+
+            if (response) return Ok(updateMovieRequest.MapToMovieResponse(id));
+
+            return NotFound();
+        }
     }
 }
