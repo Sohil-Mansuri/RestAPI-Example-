@@ -1,4 +1,6 @@
 
+using RestAPI.Example.Application;
+
 namespace RestAPI.Example.API
 {
     public class Program
@@ -9,6 +11,8 @@ namespace RestAPI.Example.API
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddApplication();
 
             var app = builder.Build();
 
