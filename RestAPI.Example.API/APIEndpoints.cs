@@ -15,6 +15,10 @@
             public const string GetAll = Base;
 
             public const string Update = $"{Base}/{{id:guid}}";
+
+            public const string Delete = Get;
+
+            public const string GetByName = $"{Base}/getByName";    
         }
     }
 }

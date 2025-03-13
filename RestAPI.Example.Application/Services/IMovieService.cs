@@ -1,8 +1,9 @@
-﻿using RestAPI.Example.Application.Models;
+﻿
+using RestAPI.Example.Application.Models;
 
-namespace RestAPI.Example.Application.Respositories
+namespace RestAPI.Example.Application.Services
 {
-    public interface IMovieRepository
+    public interface IMovieService
     {
         Task<bool> CreateAsync(Movie movie);
 
@@ -14,8 +15,6 @@ namespace RestAPI.Example.Application.Respositories
 
         Task<bool> DeleteAsync(Guid id);
 
-        Task<IEnumerable<Movie>> FindByName(string name);
-        
-        Task<bool> IsMovieExist(Guid id);
+        Task<IEnumerable<Movie>> GetByName(string name);
     }
 }

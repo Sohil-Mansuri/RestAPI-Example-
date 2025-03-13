@@ -1,7 +1,9 @@
 ﻿
 
 using Microsoft.Extensions.DependencyInjection;
+using RestAPI.Example.Application.Database;
 using RestAPI.Example.Application.Respositories;
+using RestAPI.Example.Application.Services;
 
 namespace RestAPI.Example.Application
 {
@@ -10,6 +12,15 @@ namespace RestAPI.Example.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddSingleton<IMovieRepository, MovieRepository>();
+            services.AddSingleton<IMovieService, MovieService>();
+            return services;
+        }
+
+        public static IServiceCollection AddDatabase(this IServiceCollection services, string connectionString)
+        {
+            services.AddSingleton<IDBConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
+            services.AddSingleton<DBInitilizer>();
+
             return services;
         }
     }

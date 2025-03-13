@@ -43,7 +43,7 @@ namespace RestAPI.Example.API.Mapping
                 Id = id,
                 Title = request.Title,
                 YearOfRelease = request.YearOfRelease,
-                Genres = request.Genera.ToList(),
+                Genres = request.Genres.ToList(),
             };
         }
 
@@ -54,7 +54,7 @@ namespace RestAPI.Example.API.Mapping
                 Id = id,
                 Title = updateMovieRequest.Title,
                 YearOfRelease = updateMovieRequest.YearOfRelease,
-                Genera = updateMovieRequest.Genera
+                Genera = updateMovieRequest.Genres
             };
         }
     }
