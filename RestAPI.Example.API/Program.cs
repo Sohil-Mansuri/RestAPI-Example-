@@ -1,4 +1,5 @@
 
+using RestAPI.Example.API.Mapping;
 using RestAPI.Example.Application;
 using RestAPI.Example.Application.Database;
 
@@ -9,6 +10,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddDatabase(builder.Configuration.GetConnectionString("SQLDatabase")!);
+
+builder.Services.AddSingleton<ValidationMappingMiddleware>();
 
 var app = builder.Build();
 
@@ -21,6 +24,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ValidationMappingMiddleware>();
 
 app.MapControllers();
 

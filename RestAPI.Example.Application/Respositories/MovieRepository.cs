@@ -6,9 +6,11 @@ namespace RestAPI.Example.Application.Respositories
 {
     public class MovieRepository(IDBConnectionFactory dBConnectionFactory) : IMovieRepository
     {
-        public async Task<bool> CreateAsync(Movie movie)
+        public async Task<bool> CreateAsync(Movie movie, CancellationToken cancellationToken = default)
         {
-            using var connection = await dBConnectionFactory.CreateAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
             using var transaction = connection.BeginTransaction();
 
             var result = await connection.ExecuteAsync(new
@@ -28,9 +30,11 @@ namespace RestAPI.Example.Application.Respositories
             return result > 0;
         }
 
-        public async Task<Movie?> GetByIdAsync(Guid id)
+        public async Task<Movie> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            using var connection = await dBConnectionFactory.CreateAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
 
             var movie = await connection.QuerySingleOrDefaultAsync<Movie>
                 (new CommandDefinition(@"select Id, Title, YearOfRelease from Movie where Id = @Id", new { Id = id }));
@@ -48,9 +52,11 @@ namespace RestAPI.Example.Application.Respositories
             return movie;
         }
 
-        public async Task<IEnumerable<Movie>> GetAllAsync()
+        public async Task<IEnumerable<Movie>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            using var connection = await dBConnectionFactory.CreateAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
 
             var result = await connection.QueryAsync
                 (new CommandDefinition(@"select m.*, string_agg(g.Type, ',') Genres from Movie m left join Genre g on m.Id = g.MovieId group by Id, Title, YearOfRelease"));
@@ -64,9 +70,11 @@ namespace RestAPI.Example.Application.Respositories
             });
         }
 
-        public async Task<bool> UpdateAsync(Guid id, Movie movie)
+        public async Task<bool> UpdateAsync(Guid id, Movie movie, CancellationToken cancellationToken = default)
         {
-            using var connection = await dBConnectionFactory.CreateAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
             using var transaction = connection.BeginTransaction();
             await connection.ExecuteAsync(new CommandDefinition(@"delete from Genre where MovieId = @id", new { id }, transaction));
 
@@ -85,9 +93,11 @@ namespace RestAPI.Example.Application.Respositories
             return result > 0;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
+        public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            using var connection = await dBConnectionFactory.CreateAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
 
             var result = await connection.ExecuteAsync
                 (new CommandDefinition(@"delete from Movie where Id = @id", new {id}));
@@ -95,9 +105,11 @@ namespace RestAPI.Example.Application.Respositories
             return result > 0;
         }
 
-        public async Task<IEnumerable<Movie>> FindByName(string name)
+        public async Task<IEnumerable<Movie>> FindByName(string name, CancellationToken cancellationToken = default)
         {
-            using var connection = await dBConnectionFactory.CreateAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
 
             var result = await connection.QueryAsync<Movie>
                 (new CommandDefinition(@"select * from Movie where Title = @name", new {name}));
@@ -105,9 +117,11 @@ namespace RestAPI.Example.Application.Respositories
             return result;
         }
 
-        public async Task<bool> IsMovieExist(Guid id)
+        public async Task<bool> IsMovieExist(Guid id, CancellationToken cancellationToken = default)
         {
-            using var connection = await dBConnectionFactory.CreateAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
 
             return await connection.ExecuteScalarAsync<bool>
                 (new CommandDefinition(@"select count(1) from Movie where Id = @id", new { id }));

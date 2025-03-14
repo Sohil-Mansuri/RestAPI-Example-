@@ -10,18 +10,22 @@ namespace RestAPI.Example.API.Controllers
     {
 
         [HttpPost(APIEndpoints.Movie.Create)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateMovieRequest createMovieRequest)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateMovieRequest createMovieRequest, CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             var movie = createMovieRequest.MapToMovie();
-            await movieService.CreateAsync(movie);
+            await movieService.CreateAsync(movie, cancellationToken);
             return Created(APIEndpoints.Movie.Get, movie.MapToMovieResponse());
             //return CreatedAtAction(nameof(GetByIdAsync), new { id = movie.Id }, movie);
         }
 
         [HttpGet(APIEndpoints.Movie.Get)]
-        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id)
+        public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var movie = await movieService.GetByIdAsync(id);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var movie = await movieService.GetByIdAsync(id, cancellationToken);
 
             if (movie is null) return NotFound();
 
@@ -29,9 +33,11 @@ namespace RestAPI.Example.API.Controllers
         }
 
         [HttpGet(APIEndpoints.Movie.GetByName)]
-        public async Task<IActionResult> GetByNameAsync([FromQuery] string name)
+        public async Task<IActionResult> GetByNameAsync([FromQuery] string name, CancellationToken cancellationToken)
         {
-            var movies = await movieService.GetByName(name);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var movies = await movieService.GetByName(name, cancellationToken);
 
             if (movies is null) return NotFound();
 
@@ -39,17 +45,21 @@ namespace RestAPI.Example.API.Controllers
         }
 
         [HttpGet(APIEndpoints.Movie.GetAll)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            var movies = await movieService.GetAllAsync();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var movies = await movieService.GetAllAsync(cancellationToken);
             return Ok(movies.MapToMoviesResponse());
         }
 
 
         [HttpPut(APIEndpoints.Movie.Update)]
-        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, UpdateMovieRequest updateMovieRequest)
+        public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, UpdateMovieRequest updateMovieRequest, CancellationToken cancellationToken)
         {
-            var response = await movieService.UpdateAsync(id, updateMovieRequest.MapToMovie(id));
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var response = await movieService.UpdateAsync(id, updateMovieRequest.MapToMovie(id), cancellationToken);
 
             if (response) return Ok(updateMovieRequest.MapToMovieResponse(id));
 
@@ -58,9 +68,11 @@ namespace RestAPI.Example.API.Controllers
 
 
         [HttpDelete(APIEndpoints.Movie.Delete)]
-        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
         {
-            var deleted = await movieService.DeleteAsync(id);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            var deleted = await movieService.DeleteAsync(id, cancellationToken);
             if (!deleted) return NotFound();
 
             return Ok("Record deleted successfully");

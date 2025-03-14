@@ -1,5 +1,5 @@
 ﻿
-
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using RestAPI.Example.Application.Database;
 using RestAPI.Example.Application.Respositories;
@@ -13,6 +13,7 @@ namespace RestAPI.Example.Application
         {
             services.AddSingleton<IMovieRepository, MovieRepository>();
             services.AddSingleton<IMovieService, MovieService>();
+            services.AddValidatorsFromAssemblyContaining<IApplicationMarker>(ServiceLifetime.Singleton);
             return services;
         }
 

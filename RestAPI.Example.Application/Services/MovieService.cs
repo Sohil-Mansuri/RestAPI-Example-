@@ -1,41 +1,54 @@
-﻿using RestAPI.Example.Application.Models;
+﻿using FluentValidation;
+using RestAPI.Example.Application.Models;
 using RestAPI.Example.Application.Respositories;
 
 namespace RestAPI.Example.Application.Services
 {
-    public class MovieService(IMovieRepository movieRepository) : IMovieService
+    public class MovieService(IMovieRepository movieRepository, IValidator<Movie> movieValidator) : IMovieService
     {
-        public Task<bool> CreateAsync(Movie movie)
+        public async Task<bool> CreateAsync(Movie movie, CancellationToken cancellationToken = default)
         {
-            return movieRepository.CreateAsync(movie);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await movieValidator.ValidateAndThrowAsync(movie, cancellationToken);
+            return await movieRepository.CreateAsync(movie, cancellationToken);
         }
 
-        public Task<bool> DeleteAsync(Guid id)
+        public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return movieRepository.DeleteAsync(id);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return movieRepository.DeleteAsync(id, cancellationToken);
         }
 
-        public Task<IEnumerable<Movie>> GetAllAsync()
+        public Task<IEnumerable<Movie>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return movieRepository.GetAllAsync();
+            return movieRepository.GetAllAsync(cancellationToken);
         }
 
-        public Task<Movie?> GetByIdAsync(Guid id)
+        public Task<Movie> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return movieRepository.GetByIdAsync(id);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return movieRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<IEnumerable<Movie>> GetByName(string name)
+        public async Task<IEnumerable<Movie>> GetByName(string name, CancellationToken cancellationToken = default)
         {
-            return await movieRepository.FindByName(name);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return await movieRepository.FindByName(name, cancellationToken);
         }
 
-        public async Task<bool> UpdateAsync(Guid id, Movie movie)
+        public async Task<bool> UpdateAsync(Guid id, Movie movie, CancellationToken cancellationToken = default )
         {
-            var movieExist = await movieRepository.IsMovieExist(id);
+            cancellationToken.ThrowIfCancellationRequested();
+
+            await movieValidator.ValidateAndThrowAsync(movie, cancellationToken);
+            var movieExist = await movieRepository.IsMovieExist(id, cancellationToken);
             if (movieExist)
             {
-                return await movieRepository.UpdateAsync(id, movie);
+                return await movieRepository.UpdateAsync(id, movie, cancellationToken);
             }
 
             return false;
