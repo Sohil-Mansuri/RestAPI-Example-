@@ -31,7 +31,7 @@ namespace RestAPI.Example.Application.Validator
         {
             var result = await _movieRepository.FindByName(movie.Title, cancellationToken);
 
-            if (result.Count() > 0)
+            if (result.Any())
             {
                 if (result.Any(m => m.YearOfRelease == movie.YearOfRelease)) return false;
             }

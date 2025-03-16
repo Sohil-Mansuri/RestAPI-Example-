@@ -2,6 +2,7 @@
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using RestAPI.Example.Application.Database;
+using RestAPI.Example.Application.Helper;
 using RestAPI.Example.Application.Respositories;
 using RestAPI.Example.Application.Services;
 
@@ -13,6 +14,13 @@ namespace RestAPI.Example.Application
         {
             services.AddSingleton<IMovieRepository, MovieRepository>();
             services.AddSingleton<IMovieService, MovieService>();
+
+            services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IUserService, UserService>();
+
+            services.AddSingleton<IPasswordHasher,  PasswordHasher>();
+            services.AddSingleton<TokenGenerator>();
+
             services.AddValidatorsFromAssemblyContaining<IApplicationMarker>(ServiceLifetime.Singleton);
             return services;
         }

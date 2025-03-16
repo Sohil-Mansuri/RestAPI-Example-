@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using RestAPI.Example.API.Mapping;
 using RestAPI.Example.Application.Services;
 using RestAPI.Example.Contract.Request;
 
 namespace RestAPI.Example.API.Controllers
 {
+    [Authorize]
     [ApiController]
     public class MoviesController(IMovieService movieService) : ControllerBase
     {
@@ -32,6 +34,7 @@ namespace RestAPI.Example.API.Controllers
             return Ok(movie.MapToMovieResponse());
         }
 
+        [AllowAnonymous]
         [HttpGet(APIEndpoints.Movie.GetByName)]
         public async Task<IActionResult> GetByNameAsync([FromQuery] string name, CancellationToken cancellationToken)
         {

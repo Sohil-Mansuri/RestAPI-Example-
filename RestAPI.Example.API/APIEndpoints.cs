@@ -20,5 +20,15 @@
 
             public const string GetByName = $"{Base}/getByName";    
         }
+
+        public static class User
+        {
+            public const string Base = $"{APIBase}/user";
+
+            public const string Login = $"{Base}/login";
+
+            public const string SignUp = $"{Base}/signUp";
+
+        }
     }
 }

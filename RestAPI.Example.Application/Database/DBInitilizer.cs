@@ -40,6 +40,20 @@ namespace RestAPI.Example.Application.Database
                     CREATE INDEX IX_Movie_Title ON Movie(Title);
                 END
                 ");
+
+            //create User 
+
+            await connection.ExecuteAsync(@"
+                
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='Users')
+                   BEGIN
+                    CREATE TABLE Users (
+                    Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
+                    Email NVARCHAR(255) NOT NULL UNIQUE,
+                    PasswordHash NVARCHAR(1000) NOT NULL,
+                    Department NVARCHAR(255) NOT NULL);
+                   END
+                ");
         }
     }
 }

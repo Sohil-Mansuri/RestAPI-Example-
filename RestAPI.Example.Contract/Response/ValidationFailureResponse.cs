@@ -1,13 +1,8 @@
 ﻿namespace RestAPI.Example.Contract.Response
 {
-    public class ValidationFailureResponse
-    {
-        public required IEnumerable<ValidationResponse> Errors { get; init; }
-    }
+    public record ValidationFailureResponse(IEnumerable<ValidationResponse> Errors);
 
-    public class ValidationResponse
-    {
-        public required string PropertyName { get; init; }
-        public required string Message { get; init; }
-    }
+
+    public record ValidationResponse(string PropertyName, string Message);
+
 }

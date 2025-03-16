@@ -13,7 +13,7 @@ namespace RestAPI.Example.API.Mapping
                 Id = Guid.NewGuid(),
                 Title = request.Title,
                 YearOfRelease = request.YearOfRelease,
-                Genres = request.Generes.ToList(),
+                Genres = request.Genres.ToList(),
             };
         }
 
@@ -24,7 +24,7 @@ namespace RestAPI.Example.API.Mapping
                 Id = movie.Id,
                 Title = movie.Title,
                 YearOfRelease = movie.YearOfRelease,
-                Genera = movie.Genres
+                Genres = movie.Genres
             };
         }
 
@@ -54,7 +54,18 @@ namespace RestAPI.Example.API.Mapping
                 Id = id,
                 Title = updateMovieRequest.Title,
                 YearOfRelease = updateMovieRequest.YearOfRelease,
-                Genera = updateMovieRequest.Genres
+                Genres = updateMovieRequest.Genres
+            };
+        }
+
+        public static User MapToUser(this SignUpRequest signUpRequest)
+        {
+            return new User
+            {
+                Id = Guid.NewGuid(),
+                Email = signUpRequest.Email,
+                Password = signUpRequest.Password,
+                Department = signUpRequest.Department
             };
         }
     }

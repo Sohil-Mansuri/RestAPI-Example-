@@ -66,7 +66,7 @@ namespace RestAPI.Example.Application.Respositories
                 Id = m.Id,
                 Title = m.Title,
                 YearOfRelease = m.YearOfRelease,
-                Genres = Enumerable.ToList(m.Genres.Split(','))
+                Genres = m.Genres is not null  ? Enumerable.ToList(m.Genres.Split(',')) : []
             });
         }
 
