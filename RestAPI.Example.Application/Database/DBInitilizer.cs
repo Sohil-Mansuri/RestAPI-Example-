@@ -54,6 +54,7 @@ namespace RestAPI.Example.Application.Database
                     Department NVARCHAR(255) NOT NULL);
                    END
                 ");
+
         }
     }
 }

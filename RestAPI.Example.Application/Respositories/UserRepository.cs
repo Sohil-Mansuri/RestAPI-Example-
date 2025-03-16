@@ -18,6 +18,11 @@ namespace RestAPI.Example.Application.Respositories
                     department = user.Department,
                 }, cancellationToken: cancellationToken));
 
+            //add api role also
+            var apiRoleId = await connection.QuerySingleOrDefaultAsync<Guid>(@"select Id from Roles where Name = 'APIUser'");
+            await connection.ExecuteAsync
+                (new CommandDefinition(@"insert into UserRoles (UserId, RoleId) values(@id, @apiRoleId)", new {id = user.Id, apiRoleId}));
+
             return result > 0;
         }
 
@@ -28,6 +33,16 @@ namespace RestAPI.Example.Application.Respositories
                 (new CommandDefinition(@"select Id, Email, PasswordHash from Users where Email = @email", new { email }, cancellationToken: cancellationToken));
 
             return user;
+        }
+
+        public async Task<IEnumerable<string>> GetUserRoles(Guid userId, CancellationToken cancellationToken = default)
+        {
+            using var connection = await dBConnectionFactory.CreateAsync(cancellationToken);
+
+            var result = await connection.QueryAsync<string>
+                (new CommandDefinition(@"select r.Name from Roles r join UserRoles u on u.RoleId = r.Id and u.UserId = @userId", new { userId }));
+
+            return result;
         }
     }
 }

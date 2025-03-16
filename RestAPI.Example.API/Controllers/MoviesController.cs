@@ -6,11 +6,10 @@ using RestAPI.Example.Contract.Request;
 
 namespace RestAPI.Example.API.Controllers
 {
-    [Authorize]
     [ApiController]
     public class MoviesController(IMovieService movieService) : ControllerBase
     {
-
+        [Authorize(AuthConstants.AdminPolicy)]
         [HttpPost(APIEndpoints.Movie.Create)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateMovieRequest createMovieRequest, CancellationToken cancellationToken)
         {
@@ -22,6 +21,7 @@ namespace RestAPI.Example.API.Controllers
             //return CreatedAtAction(nameof(GetByIdAsync), new { id = movie.Id }, movie);
         }
 
+        [Authorize(AuthConstants.ApiUserPolicy)]
         [HttpGet(APIEndpoints.Movie.Get)]
         public async Task<IActionResult> GetByIdAsync([FromRoute] Guid id, CancellationToken cancellationToken)
         {
@@ -34,7 +34,7 @@ namespace RestAPI.Example.API.Controllers
             return Ok(movie.MapToMovieResponse());
         }
 
-        [AllowAnonymous]
+        [Authorize(AuthConstants.ApiUserPolicy)]
         [HttpGet(APIEndpoints.Movie.GetByName)]
         public async Task<IActionResult> GetByNameAsync([FromQuery] string name, CancellationToken cancellationToken)
         {
@@ -47,6 +47,7 @@ namespace RestAPI.Example.API.Controllers
             return Ok(movies.MapToMoviesResponse());
         }
 
+        [Authorize(AuthConstants.ApiUserPolicy)]
         [HttpGet(APIEndpoints.Movie.GetAll)]
         public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
@@ -56,7 +57,7 @@ namespace RestAPI.Example.API.Controllers
             return Ok(movies.MapToMoviesResponse());
         }
 
-
+        [Authorize(AuthConstants.AdminPolicy)]
         [HttpPut(APIEndpoints.Movie.Update)]
         public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, UpdateMovieRequest updateMovieRequest, CancellationToken cancellationToken)
         {
@@ -69,7 +70,7 @@ namespace RestAPI.Example.API.Controllers
             return NotFound();
         }
 
-
+        [Authorize(AuthConstants.AdminPolicy)]
         [HttpDelete(APIEndpoints.Movie.Delete)]
         public async Task<IActionResult> DeleteAsync([FromRoute] Guid id, CancellationToken cancellationToken)
         {

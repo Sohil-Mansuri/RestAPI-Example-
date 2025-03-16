@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using RestAPI.Example.API;
 using RestAPI.Example.API.Mapping;
 using RestAPI.Example.Application;
 using RestAPI.Example.Application.Database;
@@ -36,7 +37,13 @@ builder.Services.AddAuthentication(x =>
 });
 
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(x =>
+{
+    x.AddPolicy(AuthConstants.AdminPolicy, c => c.RequireClaim(AuthConstants.AdminPolicy, "true"));
+    x.AddPolicy(AuthConstants.ApiUserPolicy, c => c.RequireAssertion(r =>
+        r.User.HasClaim(m => m is { Type: AuthConstants.AdminPolicy, Value: "true" }) ||
+        r.User.HasClaim(m => m is { Type: AuthConstants.ApiUserPolicy, Value: "true" })));
+});
 
 var app = builder.Build();
 

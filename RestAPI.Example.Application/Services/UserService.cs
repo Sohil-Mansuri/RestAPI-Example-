@@ -24,7 +24,8 @@ namespace RestAPI.Example.Application.Services
 
             if (!isValidUser) return new LoginError("5000", "User is not valid, Please check password and try again");
 
-            var token = tokenGenerator.GenerateToken(currentUser);
+            var currentUserRoles = await userRepository.GetUserRoles(currentUser.Id, cancellationToken);
+            var token = tokenGenerator.GenerateToken(currentUser, currentUserRoles);
             return new LoginResponse(currentUser.Email, token, DateTime.Now.AddMinutes(20));
         }
 
